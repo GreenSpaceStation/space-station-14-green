@@ -22,7 +22,6 @@ ent-ClothingNeckScarfStripedCentcom = полосатый шарф Центком
     .desc = Стильный полосатый шарф, в цветах Центкома. Идеальный зимний аксессуар для тех, у кого обострённое чувство моды, и тех, кто вынужден заниматься бумажной работой на холоде.
 ent-ClothingNeckScarfStripedZebra = шарф-зебра
     .desc = Полосатый шарф, обязательный аксессуар артистов.
-# make this right later
 ent-ClothingNeckScarfStripedAce = полосатый разноцветный шарф
     .desc = Стильный полосатый разноцветный шарф. Идеальный зимний аксессуар для тех, у кого обострённое чувство моды, и тех, кто вынужден заниматься бумажной работой на холоде.
 ent-ClothingNeckScarfStripedAro = { ent-ClothingNeckScarfStripedAce }
