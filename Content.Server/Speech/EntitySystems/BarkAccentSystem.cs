@@ -9,7 +9,7 @@ namespace Content.Server.Speech.EntitySystems
         [Dependency] private readonly IRobustRandom _random = default!;
 
         private static readonly IReadOnlyList<string> Barks = new List<string>{
-            " Гав!", " ГАВ", " вуф-вуф" // Corvax-Localization
+            " Гав!", " ГАВ", " вуф-вуф" // Green-Localization
         }.AsReadOnly();
 
         private static readonly IReadOnlyDictionary<string, string> SpecialWords = new Dictionary<string, string>()
