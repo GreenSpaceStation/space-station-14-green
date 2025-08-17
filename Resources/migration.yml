@@ -167,9 +167,12 @@ PrintedDocumentPermissionToCarryWeapons: null
 DrinkYorshGlass: null
 RubberPig: null
 FoodPelmeniBowl: null
-ClothingUniformJumpsuitSuperstartCop: null
-ClothingHeadCaptainHead: null
+ClothingUniformJumpsuitSuperstarCop: null
+ClothingHeadCaptainHat: null
 BookGefest: null
+KvassTankFull: null
+ShippingContainerBlank: null
+ClothingOuterWinterPilot: null
 # Green-Migration-End
 
 # 2023-07-03
