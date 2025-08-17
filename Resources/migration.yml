@@ -56,6 +56,7 @@ KvassTank: null
 LootSpawnerContrabandLow: null
 OpporozidoneBeakerSmall: null
 PottedPlantAlt0: null
+PottedPlantAlt1: null
 PottedPlantAlt2: null
 PottedPlantAlt3: null
 PottedPlantAlt4: null
@@ -77,6 +78,14 @@ ShippingContainerVitezstvi: null
 SpawnMobGorillaLargo: null
 SpawnPointPilot: null
 SpawnPointSurgeon: null
+BriefcaseIAAFilled: null
+ClothingBackpackCE: null
+ClothingNeckMantleHOSShoulder: null
+ClothingUniformJumpskirtHoSBlack: null
+ClothingUniformJumpsuitHoSBlack: null
+DrinkBadTouchGlass: null
+FloorAzureWaterEntity: null
+StatueTushkan: null
 # Green-Migration-End
 
 # 2023-07-03
