@@ -198,7 +198,7 @@ public sealed partial class BanManager : IBanManager, IPostInjectInit
         _sawmill.Info(logMessage);
         _chat.SendAdminAlert(logMessage);
 
-        ExecuteWebhookServerBan(targetName, adminName, banDef); // Green-BanWebhook
+        ExecuteWebhookServerBan(targetUsername ?? "null", adminName, banDef); // Green-BanWebhook
 
         KickMatchingConnectedPlayers(banDef, "newly placed ban");
     }
@@ -377,14 +377,14 @@ public sealed partial class BanManager : IBanManager, IPostInjectInit
         {
             title = _localizationManager.GetString("admin-webhook-ban-server-permanent-title");
             description = _localizationManager.GetString("admin-webhook-ban-server-permanent-description",
-                ("target", target), ("admin", admin), ("date", def.BanTime), ("reason", def.Reason));
+                ("target", target), ("admin", admin), ("date", def.BanTime.ToUniversalTime()), ("reason", def.Reason));
             color = 0xFF0000;
         }
         else
         {
             title = _localizationManager.GetString("admin-webhook-ban-server-temporarily-title");
             description = _localizationManager.GetString("admin-webhook-ban-server-temporarily-description",
-                ("target", target), ("admin", admin), ("date", def.BanTime), ("expires", def.ExpirationTime), ("time", def.ExpirationTime - def.BanTime), ("reason", def.Reason));
+                ("target", target), ("admin", admin), ("date", def.BanTime.ToUniversalTime()), ("expires", def.ExpirationTime.Value.ToUniversalTime()), ("reason", def.Reason));
             color = 0xFF7F00;
         }
 
@@ -398,7 +398,7 @@ public sealed partial class BanManager : IBanManager, IPostInjectInit
 
         var title = _localizationManager.GetString("admin-webhook-ban-role-title");
         var description = _localizationManager.GetString("admin-webhook-ban-role-description",
-            ("target", target), ("admin", admin), ("date", def.BanTime), ("expires", def.ExpirationTime), ("time", def.ExpirationTime - def.BanTime), ("role", def.Role), ("reason", def.Reason));
+            ("target", target), ("admin", admin), ("date", def.BanTime.ToUniversalTime()), ("expires", def.ExpirationTime.Value.ToUniversalTime()), ("role", def.Role), ("reason", def.Reason));
         var color = 0xFFFF00;
 
         ExecuteWebhook(title, description, color);
