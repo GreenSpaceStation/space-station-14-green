@@ -16,7 +16,7 @@ using NpgsqlTypes;
 namespace Content.Server.Database.Migrations.Postgres
 {
     [DbContext(typeof(PostgresServerDbContext))]
-    [Migration("20250820133045_Notes")]
+    [Migration("20250820160347_Notes")]
     partial class Notes
     {
         /// <inheritdoc />
@@ -839,8 +839,9 @@ namespace Content.Server.Database.Migrations.Postgres
                         .HasColumnType("text")
                         .HasColumnName("char_name");
 
-                    b.Property<int>("Erp")
-                        .HasColumnType("integer")
+                    b.Property<string>("Erp")
+                        .IsRequired()
+                        .HasColumnType("text")
                         .HasColumnName("erp");
 
                     b.Property<string>("EyeColor")
