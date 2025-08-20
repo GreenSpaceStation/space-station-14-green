@@ -8,6 +8,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Content.Server.Administration.Logs;
 using Content.Server.Administration.Managers;
+using Content.Shared._Green.Notes;
 using Content.Shared.Administration.Logs;
 using Content.Shared.Construction.Prototypes;
 using Content.Shared.Database;
@@ -215,6 +216,12 @@ namespace Content.Server.Database
 
             var spawnPriority = (SpawnPriorityPreference) profile.SpawnPriority;
 
+            // Green-Notes-Start
+            var erp = ErpPreference.No;
+            if (Enum.TryParse<ErpPreference>(profile.Erp, true, out var erpVal))
+                erp = erpVal;
+            // Green-Notes-End
+
             var gender = sex == Sex.Male ? Gender.Male : Gender.Female;
             if (Enum.TryParse<Gender>(profile.Gender, true, out var genderVal))
                 gender = genderVal;
@@ -277,6 +284,9 @@ namespace Content.Server.Database
                     markings
                 ),
                 spawnPriority,
+                // Green-Notes-Start
+                erp,
+                // Green-Notes-End
                 jobs,
                 (PreferenceUnavailableMode) profile.PreferenceUnavailable,
                 antags.ToHashSet(),
@@ -312,6 +322,9 @@ namespace Content.Server.Database
             profile.Markings = markings;
             profile.Slot = slot;
             profile.PreferenceUnavailable = (DbPreferenceUnavailableMode) humanoid.PreferenceUnavailable;
+            // Green-Notes-Start
+            profile.Erp = humanoid.Erp.ToString();
+            // Green-Notes-End
 
             profile.Jobs.Clear();
             profile.Jobs.AddRange(

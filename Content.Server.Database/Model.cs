@@ -414,6 +414,9 @@ namespace Content.Server.Database
         public string EyeColor { get; set; } = null!;
         public string SkinColor { get; set; } = null!;
         public int SpawnPriority { get; set; } = 0;
+        // Green-Notes-Start
+        public string Erp { get; set; } = null!;
+        // Green-Notes-End
         public List<Job> Jobs { get; } = new();
         public List<Antag> Antags { get; } = new();
         public List<Trait> Traits { get; } = new();

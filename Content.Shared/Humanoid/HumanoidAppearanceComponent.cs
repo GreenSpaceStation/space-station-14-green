@@ -1,3 +1,4 @@
+using Content.Shared._Green.Notes;
 using Content.Shared.DisplacementMap;
 using Content.Shared.Humanoid.Markings;
 using Content.Shared.Humanoid.Prototypes;
@@ -73,6 +74,11 @@ public sealed partial class HumanoidAppearanceComponent : Component
 
     [DataField, AutoNetworkedField]
     public Color EyeColor = Color.Brown;
+
+    // Green-Notes-Start
+    [DataField, AutoNetworkedField]
+    public ErpPreference Erp = ErpPreference.No;
+    // Green-Notes-End
 
     /// <summary>
     ///     Hair color of this humanoid. Used to avoid looping through all markings

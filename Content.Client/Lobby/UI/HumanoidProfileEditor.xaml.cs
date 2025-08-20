@@ -9,6 +9,7 @@ using Content.Client.Players.PlayTimeTracking;
 using Content.Client.Sprite;
 using Content.Client.Stylesheets;
 using Content.Client.UserInterface.Systems.Guidebook;
+using Content.Shared._Green.Notes;
 using Content.Shared.CCVar;
 using Content.Shared.Clothing;
 using Content.Shared.GameTicking;
@@ -425,6 +426,21 @@ namespace Content.Client.Lobby.UI
 
             #endregion Markings
 
+            // Green-Notes-Start
+            TabContainer.SetTabTitle(5, Loc.GetString("humanoid-profile-editor-notes-tab"));
+
+            ErpButton.AddItem(Loc.GetString("humanoid-profile-editor-erp-against-text"), (int)ErpPreference.Against);
+            ErpButton.AddItem(Loc.GetString("humanoid-profile-editor-erp-no-text"), (int)ErpPreference.No);
+            ErpButton.AddItem(Loc.GetString("humanoid-profile-editor-erp-yes-text"), (int)ErpPreference.Yes);
+            ErpButton.AddItem(Loc.GetString("humanoid-profile-editor-erp-absolute-text"), (int)ErpPreference.Absolute);
+
+            ErpButton.OnItemSelected += e =>
+            {
+                ErpButton.SelectId(e.Id);
+                SetErp((ErpPreference)e.Id);
+            };
+            // Green-Notes-End
+
             RefreshFlavorText();
 
             #region Dummy
@@ -768,6 +784,9 @@ namespace Content.Client.Lobby.UI
             UpdateHairPickers();
             UpdateCMarkingsHair();
             UpdateCMarkingsFacialHair();
+            // Green-Notes-Start
+            UpdateErpControls();
+            // Green-Notes-End
 
             RefreshAntags();
             RefreshJobs();
@@ -1238,6 +1257,14 @@ namespace Content.Client.Lobby.UI
             SetDirty();
         }
 
+        // Green-Notes-Start
+        private void SetErp(ErpPreference newErp)
+        {
+            Profile = Profile?.WithErpPreference(newErp);
+            SetDirty();
+        }
+        // Green-Notes-End
+
         public bool IsDirty
         {
             get => _isDirty;
@@ -1426,6 +1453,16 @@ namespace Content.Client.Lobby.UI
 
             SpawnPriorityButton.SelectId((int) Profile.SpawnPriority);
         }
+
+        // Green-Notes-Start
+        private void UpdateErpControls()
+        {
+            if (Profile is null)
+                return;
+
+            ErpButton.SelectId((int)Profile.Erp);
+        }
+        // Green-Notes-End
 
         private void UpdateHairPickers()
         {

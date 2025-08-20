@@ -1,5 +1,6 @@
 using System.Linq;
 using System.Text.RegularExpressions;
+using Content.Shared._Green.Notes;
 using Content.Shared.CCVar;
 using Content.Shared.GameTicking;
 using Content.Shared.Humanoid;
@@ -100,6 +101,11 @@ namespace Content.Shared.Preferences
         [DataField]
         public SpawnPriorityPreference SpawnPriority { get; private set; } = SpawnPriorityPreference.None;
 
+        // Green-Notes-Start
+        [DataField]
+        public ErpPreference Erp { get; private set; } = ErpPreference.No;
+        // Green-Notes-End
+
         /// <summary>
         /// <see cref="_jobPriorities"/>
         /// </summary>
@@ -131,6 +137,9 @@ namespace Content.Shared.Preferences
             Gender gender,
             HumanoidCharacterAppearance appearance,
             SpawnPriorityPreference spawnPriority,
+            // Green-Notes-Start
+            ErpPreference erp,
+            // Green-Notes-End
             Dictionary<ProtoId<JobPrototype>, JobPriority> jobPriorities,
             PreferenceUnavailableMode preferenceUnavailable,
             HashSet<ProtoId<AntagPrototype>> antagPreferences,
@@ -145,6 +154,9 @@ namespace Content.Shared.Preferences
             Gender = gender;
             Appearance = appearance;
             SpawnPriority = spawnPriority;
+            // Green-Notes-Start
+            Erp = erp;
+            // Green-Notes-End
             _jobPriorities = jobPriorities;
             PreferenceUnavailable = preferenceUnavailable;
             _antagPreferences = antagPreferences;
@@ -176,6 +188,9 @@ namespace Content.Shared.Preferences
                 other.Gender,
                 other.Appearance.Clone(),
                 other.SpawnPriority,
+                // Green-Notes-Start
+                other.Erp,
+                // Green-Notes-End
                 new Dictionary<ProtoId<JobPrototype>, JobPriority>(other.JobPriorities),
                 other.PreferenceUnavailable,
                 new HashSet<ProtoId<AntagPrototype>>(other.AntagPreferences),
@@ -303,6 +318,13 @@ namespace Content.Shared.Preferences
         {
             return new(this) { SpawnPriority = spawnPriority };
         }
+
+        // Green-Notes-Start
+        public HumanoidCharacterProfile WithErpPreference(ErpPreference erp)
+        {
+            return new(this) { Erp = erp };
+        }
+        // Green-Notes-End
 
         public HumanoidCharacterProfile WithJobPriorities(IEnumerable<KeyValuePair<ProtoId<JobPrototype>, JobPriority>> jobPriorities)
         {
@@ -465,6 +487,9 @@ namespace Content.Shared.Preferences
             if (Species != other.Species) return false;
             if (PreferenceUnavailable != other.PreferenceUnavailable) return false;
             if (SpawnPriority != other.SpawnPriority) return false;
+            // Green-Notes-Start
+            if (Erp != other.Erp) return false;
+            // Green-Notes-End
             if (!_jobPriorities.SequenceEqual(other._jobPriorities)) return false;
             if (!_antagPreferences.SequenceEqual(other._antagPreferences)) return false;
             if (!_traitPreferences.SequenceEqual(other._traitPreferences)) return false;
@@ -568,6 +593,17 @@ namespace Content.Shared.Preferences
                 _ => SpawnPriorityPreference.None // Invalid enum values.
             };
 
+            // Green-Notes-Start
+            var erp = Erp switch
+            {
+                ErpPreference.Against => ErpPreference.Against,
+                ErpPreference.No => ErpPreference.No,
+                ErpPreference.Yes => ErpPreference.Yes,
+                ErpPreference.Absolute => ErpPreference.Absolute,
+                _ => ErpPreference.No
+            };
+            // Green-Notes-End
+
             var priorities = new Dictionary<ProtoId<JobPrototype>, JobPriority>(JobPriorities
                 .Where(p => prototypeManager.TryIndex<JobPrototype>(p.Key, out var job) && job.SetPreference && p.Value switch
                 {
@@ -604,6 +640,7 @@ namespace Content.Shared.Preferences
             Gender = gender;
             Appearance = appearance;
             SpawnPriority = spawnPriority;
+            Erp = erp; // Green-Notes
 
             _jobPriorities.Clear();
 
@@ -714,6 +751,9 @@ namespace Content.Shared.Preferences
             hashCode.Add((int)Gender);
             hashCode.Add(Appearance);
             hashCode.Add((int)SpawnPriority);
+            // Green-Notes-Start
+            hashCode.Add((int)Erp);
+            // Green-Notes-End
             hashCode.Add((int)PreferenceUnavailable);
             return hashCode.ToHashCode();
         }
