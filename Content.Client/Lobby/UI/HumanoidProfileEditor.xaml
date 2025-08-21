@@ -136,26 +136,6 @@
                         <humanoid:MarkingPicker Name="Markings" IgnoreCategories="Hair,FacialHair" />
                     </ScrollContainer>
                 </BoxContainer>
-                <!-- Green-Notes-Start -->
-                <!--<BoxContainer Orientation="Vertical" Margin="10">
-                    <ScrollContainer VerticalExpand="True">
-                        <BoxContainer Orientation="Vertical" >
-                            <TextEdit Name="NotesEdit" HorizontalExpand="True" VerticalExpand="True" MaxSize="2000 600" />
-                            <RichTextLabel Text="{Loc 'humanoid-profile-editor-ooc-label'}" />
-                            <BoxContainer HorizontalExpand="True">
-                                <Label Text="{Loc 'humanoid-profile-editor-erp-label'}" />
-                                <Control HorizontalExpand="True" />
-                                <OptionButton Name="ErpButton" HorizontalAlignment="Right" />
-                            </BoxContainer>
-                            <BoxContainer HorizontalExpand="True">
-                                <Label Text="{Loc 'humanoid-profile-editor-discord-label'}" />
-                                <Control HorizontalExpand="True" />
-                                <LineEdit Name="DiscordEdit" MinSize="120 0" HorizontalAlignment="Right" />
-                            </BoxContainer>
-                        </BoxContainer>
-                    </ScrollContainer>
-                </BoxContainer>-->
-                <!-- Green-Notes-End -->
             </TabContainer>
         </BoxContainer>
         <!-- Right side -->
