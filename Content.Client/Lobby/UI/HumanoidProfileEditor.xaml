@@ -137,10 +137,10 @@
                     </ScrollContainer>
                 </BoxContainer>
                 <!-- Green-Notes-Start -->
-                <BoxContainer Orientation="Vertical" Margin="10">
+                <!--<BoxContainer Orientation="Vertical" Margin="10">
                     <ScrollContainer VerticalExpand="True">
                         <BoxContainer Orientation="Vertical" >
-                            <TextEdit Name="NotesEdit" />
+                            <TextEdit Name="NotesEdit" HorizontalExpand="True" VerticalExpand="True" MaxSize="2000 600" />
                             <RichTextLabel Text="{Loc 'humanoid-profile-editor-ooc-label'}" />
                             <BoxContainer HorizontalExpand="True">
                                 <Label Text="{Loc 'humanoid-profile-editor-erp-label'}" />
@@ -154,7 +154,7 @@
                             </BoxContainer>
                         </BoxContainer>
                     </ScrollContainer>
-                </BoxContainer>
+                </BoxContainer>-->
                 <!-- Green-Notes-End -->
             </TabContainer>
         </BoxContainer>

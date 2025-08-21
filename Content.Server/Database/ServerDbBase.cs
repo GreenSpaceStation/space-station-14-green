@@ -269,6 +269,7 @@ namespace Content.Server.Database
             return new HumanoidCharacterProfile(
                 profile.CharacterName,
                 profile.FlavorText,
+                erp, // Green-Notes
                 profile.Species,
                 profile.Age,
                 sex,
@@ -284,9 +285,6 @@ namespace Content.Server.Database
                     markings
                 ),
                 spawnPriority,
-                // Green-Notes-Start
-                erp,
-                // Green-Notes-End
                 jobs,
                 (PreferenceUnavailableMode) profile.PreferenceUnavailable,
                 antags.ToHashSet(),
@@ -308,6 +306,7 @@ namespace Content.Server.Database
 
             profile.CharacterName = humanoid.Name;
             profile.FlavorText = humanoid.FlavorText;
+            profile.Erp = humanoid.Erp.ToString(); // Green-Notes
             profile.Species = humanoid.Species;
             profile.Age = humanoid.Age;
             profile.Sex = humanoid.Sex.ToString();
@@ -322,9 +321,6 @@ namespace Content.Server.Database
             profile.Markings = markings;
             profile.Slot = slot;
             profile.PreferenceUnavailable = (DbPreferenceUnavailableMode) humanoid.PreferenceUnavailable;
-            // Green-Notes-Start
-            profile.Erp = humanoid.Erp.ToString();
-            // Green-Notes-End
 
             profile.Jobs.Clear();
             profile.Jobs.AddRange(

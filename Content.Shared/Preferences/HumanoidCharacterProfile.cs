@@ -69,6 +69,11 @@ namespace Content.Shared.Preferences
         [DataField]
         public string FlavorText { get; set; } = string.Empty;
 
+        // Green-Notes-Start
+        [DataField]
+        public ErpPreference Erp { get; private set; } = ErpPreference.No;
+        // Green-Notes-End
+
         /// <summary>
         /// Associated <see cref="SpeciesPrototype"/> for this profile.
         /// </summary>
@@ -101,11 +106,6 @@ namespace Content.Shared.Preferences
         [DataField]
         public SpawnPriorityPreference SpawnPriority { get; private set; } = SpawnPriorityPreference.None;
 
-        // Green-Notes-Start
-        [DataField]
-        public ErpPreference Erp { get; private set; } = ErpPreference.No;
-        // Green-Notes-End
-
         /// <summary>
         /// <see cref="_jobPriorities"/>
         /// </summary>
@@ -131,15 +131,13 @@ namespace Content.Shared.Preferences
         public HumanoidCharacterProfile(
             string name,
             string flavortext,
+            ErpPreference erp, // Green-Notes
             string species,
             int age,
             Sex sex,
             Gender gender,
             HumanoidCharacterAppearance appearance,
             SpawnPriorityPreference spawnPriority,
-            // Green-Notes-Start
-            ErpPreference erp,
-            // Green-Notes-End
             Dictionary<ProtoId<JobPrototype>, JobPriority> jobPriorities,
             PreferenceUnavailableMode preferenceUnavailable,
             HashSet<ProtoId<AntagPrototype>> antagPreferences,
@@ -148,15 +146,13 @@ namespace Content.Shared.Preferences
         {
             Name = name;
             FlavorText = flavortext;
+            Erp = erp; // Green-Notes
             Species = species;
             Age = age;
             Sex = sex;
             Gender = gender;
             Appearance = appearance;
             SpawnPriority = spawnPriority;
-            // Green-Notes-Start
-            Erp = erp;
-            // Green-Notes-End
             _jobPriorities = jobPriorities;
             PreferenceUnavailable = preferenceUnavailable;
             _antagPreferences = antagPreferences;
@@ -182,15 +178,13 @@ namespace Content.Shared.Preferences
         public HumanoidCharacterProfile(HumanoidCharacterProfile other)
             : this(other.Name,
                 other.FlavorText,
+                other.Erp, // Green-Notes
                 other.Species,
                 other.Age,
                 other.Sex,
                 other.Gender,
                 other.Appearance.Clone(),
                 other.SpawnPriority,
-                // Green-Notes-Start
-                other.Erp,
-                // Green-Notes-End
                 new Dictionary<ProtoId<JobPrototype>, JobPriority>(other.JobPriorities),
                 other.PreferenceUnavailable,
                 new HashSet<ProtoId<AntagPrototype>>(other.AntagPreferences),
@@ -288,6 +282,13 @@ namespace Content.Shared.Preferences
             return new(this) { FlavorText = flavorText };
         }
 
+        // Green-Notes-Start
+        public HumanoidCharacterProfile WithErpPreference(ErpPreference erp)
+        {
+            return new(this) { Erp = erp };
+        }
+        // Green-Notes-End
+
         public HumanoidCharacterProfile WithAge(int age)
         {
             return new(this) { Age = age };
@@ -318,13 +319,6 @@ namespace Content.Shared.Preferences
         {
             return new(this) { SpawnPriority = spawnPriority };
         }
-
-        // Green-Notes-Start
-        public HumanoidCharacterProfile WithErpPreference(ErpPreference erp)
-        {
-            return new(this) { Erp = erp };
-        }
-        // Green-Notes-End
 
         public HumanoidCharacterProfile WithJobPriorities(IEnumerable<KeyValuePair<ProtoId<JobPrototype>, JobPriority>> jobPriorities)
         {
@@ -487,14 +481,12 @@ namespace Content.Shared.Preferences
             if (Species != other.Species) return false;
             if (PreferenceUnavailable != other.PreferenceUnavailable) return false;
             if (SpawnPriority != other.SpawnPriority) return false;
-            // Green-Notes-Start
-            if (Erp != other.Erp) return false;
-            // Green-Notes-End
             if (!_jobPriorities.SequenceEqual(other._jobPriorities)) return false;
             if (!_antagPreferences.SequenceEqual(other._antagPreferences)) return false;
             if (!_traitPreferences.SequenceEqual(other._traitPreferences)) return false;
             if (!Loadouts.SequenceEqual(other.Loadouts)) return false;
             if (FlavorText != other.FlavorText) return false;
+            if (Erp != other.Erp) return false; // Green-Notes
             return Appearance.MemberwiseEquals(other.Appearance);
         }
 
@@ -576,6 +568,17 @@ namespace Content.Shared.Preferences
                 flavortext = FormattedMessage.RemoveMarkupOrThrow(FlavorText);
             }
 
+            // Green-Notes-Start
+            var erp = Erp switch
+            {
+                ErpPreference.Against => ErpPreference.Against,
+                ErpPreference.No => ErpPreference.No,
+                ErpPreference.Yes => ErpPreference.Yes,
+                ErpPreference.Absolute => ErpPreference.Absolute,
+                _ => ErpPreference.No
+            };
+            // Green-Notes-End
+
             var appearance = HumanoidCharacterAppearance.EnsureValid(Appearance, Species, Sex);
 
             var prefsUnavailableMode = PreferenceUnavailable switch
@@ -592,17 +595,6 @@ namespace Content.Shared.Preferences
                 SpawnPriorityPreference.Cryosleep => SpawnPriorityPreference.Cryosleep,
                 _ => SpawnPriorityPreference.None // Invalid enum values.
             };
-
-            // Green-Notes-Start
-            var erp = Erp switch
-            {
-                ErpPreference.Against => ErpPreference.Against,
-                ErpPreference.No => ErpPreference.No,
-                ErpPreference.Yes => ErpPreference.Yes,
-                ErpPreference.Absolute => ErpPreference.Absolute,
-                _ => ErpPreference.No
-            };
-            // Green-Notes-End
 
             var priorities = new Dictionary<ProtoId<JobPrototype>, JobPriority>(JobPriorities
                 .Where(p => prototypeManager.TryIndex<JobPrototype>(p.Key, out var job) && job.SetPreference && p.Value switch
@@ -635,12 +627,12 @@ namespace Content.Shared.Preferences
 
             Name = name;
             FlavorText = flavortext;
+            Erp = erp; // Green-Notes
             Age = age;
             Sex = sex;
             Gender = gender;
             Appearance = appearance;
             SpawnPriority = spawnPriority;
-            Erp = erp; // Green-Notes
 
             _jobPriorities.Clear();
 
@@ -745,15 +737,13 @@ namespace Content.Shared.Preferences
             hashCode.Add(_loadouts);
             hashCode.Add(Name);
             hashCode.Add(FlavorText);
+            hashCode.Add((int)Erp); // Green-Notes
             hashCode.Add(Species);
             hashCode.Add(Age);
             hashCode.Add((int)Sex);
             hashCode.Add((int)Gender);
             hashCode.Add(Appearance);
             hashCode.Add((int)SpawnPriority);
-            // Green-Notes-Start
-            hashCode.Add((int)Erp);
-            // Green-Notes-End
             hashCode.Add((int)PreferenceUnavailable);
             return hashCode.ToHashCode();
         }

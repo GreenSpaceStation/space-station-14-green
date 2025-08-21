@@ -223,9 +223,6 @@ public sealed class HumanoidAppearanceSystem : SharedHumanoidAppearanceSystem
         humanoid.Species = profile.Species;
         humanoid.SkinColor = profile.Appearance.SkinColor;
         humanoid.EyeColor = profile.Appearance.EyeColor;
-        // Green-Notes-Start
-        humanoid.Erp = profile.Erp;
-        // Green-Notes-End
 
         UpdateSprite((uid, humanoid, Comp<SpriteComponent>(uid)));
     }

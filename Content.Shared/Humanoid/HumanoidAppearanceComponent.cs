@@ -75,11 +75,6 @@ public sealed partial class HumanoidAppearanceComponent : Component
     [DataField, AutoNetworkedField]
     public Color EyeColor = Color.Brown;
 
-    // Green-Notes-Start
-    [DataField, AutoNetworkedField]
-    public ErpPreference Erp = ErpPreference.No;
-    // Green-Notes-End
-
     /// <summary>
     ///     Hair color of this humanoid. Used to avoid looping through all markings
     /// </summary>

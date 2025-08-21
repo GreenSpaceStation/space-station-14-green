@@ -446,10 +446,6 @@ public abstract class SharedHumanoidAppearanceSystem : EntitySystem
 
         humanoid.Age = profile.Age;
 
-        // Green-Notes-Start
-        humanoid.Erp = profile.Erp;
-        // Green-Notes-End
-
         Dirty(uid, humanoid);
     }
 

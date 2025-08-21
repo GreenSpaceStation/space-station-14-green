@@ -60,6 +60,7 @@ namespace Content.Client.Lobby.UI
 
         private FlavorText.FlavorText? _flavorText;
         private TextEdit? _flavorTextEdit;
+        private OptionButton? _erpButton; // Green-Notes
 
         // One at a time.
         private LoadoutWindow? _loadoutWindow;
@@ -426,21 +427,6 @@ namespace Content.Client.Lobby.UI
 
             #endregion Markings
 
-            // Green-Notes-Start
-            TabContainer.SetTabTitle(5, Loc.GetString("humanoid-profile-editor-notes-tab"));
-
-            ErpButton.AddItem(Loc.GetString("humanoid-profile-editor-erp-against-text"), (int)ErpPreference.Against);
-            ErpButton.AddItem(Loc.GetString("humanoid-profile-editor-erp-no-text"), (int)ErpPreference.No);
-            ErpButton.AddItem(Loc.GetString("humanoid-profile-editor-erp-yes-text"), (int)ErpPreference.Yes);
-            ErpButton.AddItem(Loc.GetString("humanoid-profile-editor-erp-absolute-text"), (int)ErpPreference.Absolute);
-
-            ErpButton.OnItemSelected += e =>
-            {
-                ErpButton.SelectId(e.Id);
-                SetErp((ErpPreference)e.Id);
-            };
-            // Green-Notes-End
-
             RefreshFlavorText();
 
             #region Dummy
@@ -485,8 +471,10 @@ namespace Content.Client.Lobby.UI
                 TabContainer.AddChild(_flavorText);
                 TabContainer.SetTabTitle(TabContainer.ChildCount - 1, Loc.GetString("humanoid-profile-editor-flavortext-tab"));
                 _flavorTextEdit = _flavorText.CFlavorTextInput;
+                _erpButton = _flavorText.ErpButton; // Green-Notes
 
                 _flavorText.OnFlavorTextChanged += OnFlavorTextChange;
+                _flavorText.OnErpChanged += OnErpChange;
             }
             else
             {
@@ -495,9 +483,14 @@ namespace Content.Client.Lobby.UI
 
                 TabContainer.RemoveChild(_flavorText);
                 _flavorText.OnFlavorTextChanged -= OnFlavorTextChange;
+                _flavorText.OnErpChanged -= OnErpChange; // Green-Notes
                 _flavorText.Dispose();
                 _flavorTextEdit?.Dispose();
                 _flavorTextEdit = null;
+                // Green-Notes-Start
+                _erpButton?.Dispose();
+                _erpButton = null;
+                // Green-Notes-End
                 _flavorText = null;
             }
         }
@@ -773,6 +766,7 @@ namespace Content.Client.Lobby.UI
 
             UpdateNameEdit();
             UpdateFlavorTextEdit();
+            UpdateErpButton(); // Green-Notes
             UpdateSexControls();
             UpdateGenderControls();
             UpdateSkinColor();
@@ -784,9 +778,6 @@ namespace Content.Client.Lobby.UI
             UpdateHairPickers();
             UpdateCMarkingsHair();
             UpdateCMarkingsFacialHair();
-            // Green-Notes-Start
-            UpdateErpControls();
-            // Green-Notes-End
 
             RefreshAntags();
             RefreshJobs();
@@ -1093,6 +1084,17 @@ namespace Content.Client.Lobby.UI
             SetDirty();
         }
 
+        // Green-Notes-Start
+        private void OnErpChange(ErpPreference erp)
+        {
+            if (Profile is null)
+                return;
+
+            Profile = Profile.WithErpPreference(erp);
+            SetDirty();
+        }
+        // Green-Notes-End
+
         private void OnMarkingChange(MarkingSet markings)
         {
             if (Profile is null)
@@ -1257,14 +1259,6 @@ namespace Content.Client.Lobby.UI
             SetDirty();
         }
 
-        // Green-Notes-Start
-        private void SetErp(ErpPreference newErp)
-        {
-            Profile = Profile?.WithErpPreference(newErp);
-            SetDirty();
-        }
-        // Green-Notes-End
-
         public bool IsDirty
         {
             get => _isDirty;
@@ -1290,6 +1284,14 @@ namespace Content.Client.Lobby.UI
                 _flavorTextEdit.TextRope = new Rope.Leaf(Profile?.FlavorText ?? "");
             }
         }
+
+        // Green-Notes-Start
+        private void UpdateErpButton()
+        {
+            if (_erpButton is not null)
+                _erpButton.SelectId((int)(Profile?.Erp ?? ErpPreference.No));
+        }
+        // Green-Notes-End
 
         private void UpdateAgeEdit()
         {
@@ -1453,16 +1455,6 @@ namespace Content.Client.Lobby.UI
 
             SpawnPriorityButton.SelectId((int) Profile.SpawnPriority);
         }
-
-        // Green-Notes-Start
-        private void UpdateErpControls()
-        {
-            if (Profile is null)
-                return;
-
-            ErpButton.SelectId((int)Profile.Erp);
-        }
-        // Green-Notes-End
 
         private void UpdateHairPickers()
         {
