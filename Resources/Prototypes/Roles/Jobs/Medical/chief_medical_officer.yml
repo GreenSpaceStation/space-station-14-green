@@ -11,7 +11,7 @@
       time: 21600 #6 hrs # Green-JobTime
     - !type:RoleTimeRequirement
       role: JobMedicalDoctor
-      time: 36000 #5 hrs # Green-JobTime
+      time: 36000 #10 hrs # Green-JobTime
     - !type:DepartmentTimeRequirement
       department: Medical
       time: 72000 #20 hrs # Green-JobTime
