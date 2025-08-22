@@ -1,12 +1,17 @@
+using System.Collections.Frozen;
+using System.Linq;
 using Content.Server.Administration.Logs;
 using Content.Server.Chat.Systems;
+using Content.Server.CrewManifest;
 using Content.Server.Power.Components;
 using Content.Server.Radio.Components;
 using Content.Shared.Chat;
 using Content.Shared.Database;
 using Content.Shared.Radio;
 using Content.Shared.Radio.Components;
+using Content.Shared.Roles;
 using Content.Shared.Speech;
+using Content.Shared.Station;
 using Robust.Shared.Map;
 using Robust.Shared.Network;
 using Robust.Shared.Player;
@@ -28,17 +33,26 @@ public sealed class RadioSystem : EntitySystem
     [Dependency] private readonly IPrototypeManager _prototype = default!;
     [Dependency] private readonly IRobustRandom _random = default!;
     [Dependency] private readonly ChatSystem _chat = default!;
+    [Dependency] private readonly CrewManifestSystem _manifest = default!;
+    [Dependency] private readonly SharedStationSystem _station = default!;
 
     // set used to prevent radio feedback loops.
     private readonly HashSet<string> _messages = new();
 
     private EntityQuery<TelecomExemptComponent> _exemptQuery;
 
+    // Green-HeadsetManifest-Start
+    private FrozenDictionary<string, string> _jobColors = default!;
+
+    private const string UnknownColor = "darkgray";
+    // Green-HeadsetManifest-End
+
     public override void Initialize()
     {
         base.Initialize();
         SubscribeLocalEvent<IntrinsicRadioReceiverComponent, RadioReceiveEvent>(OnIntrinsicReceive);
         SubscribeLocalEvent<IntrinsicRadioTransmitterComponent, EntitySpokeEvent>(OnIntrinsicSpeak);
+        SubscribeLocalEvent<PrototypesReloadedEventArgs>(OnPrototypeReloaded); // Green-HeadsetManifest
 
         _exemptQuery = GetEntityQuery<TelecomExemptComponent>();
     }
@@ -93,12 +107,39 @@ public sealed class RadioSystem : EntitySystem
             ? FormattedMessage.EscapeText(message)
             : message;
 
+        // Green-HeadsetManifest-Start
+        var jobName = Loc.GetString("job-name-unknown");
+        var jobColor = UnknownColor;
+
+        var station = _station.GetOwningStation(messageSource);
+
+        if (station is not null)
+        {
+            var manifest = _manifest.GetCrewManifest(station.Value);
+
+            if (manifest.entries is not null)
+            {
+                var entry = manifest.entries.Entries.FirstOrDefault(entry => entry.Name == name);
+
+                if (entry is not null)
+                {
+                    jobName = entry.JobTitle;
+                    jobColor = _jobColors[entry.JobPrototype];
+                }
+            }
+        }
+        // Green-HeadsetManifest-End
+
         var wrappedMessage = Loc.GetString(speech.Bold ? "chat-radio-message-wrap-bold" : "chat-radio-message-wrap",
             ("color", channel.Color),
             ("fontType", speech.FontId),
             ("fontSize", speech.FontSize),
             ("verb", Loc.GetString(_random.Pick(speech.SpeechVerbStrings))),
             ("channel", $"\\[{channel.LocalizedName}\\]"),
+            // Green-HeadsetManifest-Start
+            ("jobName", $"\\[{jobName}\\]"),
+            ("jobColor", jobColor),
+            // Green-HeadsetManifest-End
             ("name", name),
             ("message", content));
 
@@ -174,4 +215,24 @@ public sealed class RadioSystem : EntitySystem
         }
         return false;
     }
+
+    // Green-HeadsetManifest-Start
+    private void OnPrototypeReloaded(ref PrototypesReloadedEventArgs e)
+    {
+        DepartmentPrototype[] departments = [.. _prototype.EnumeratePrototypes<DepartmentPrototype>()];
+
+        JobPrototype[] jobs = [.. _prototype.EnumeratePrototypes<JobPrototype>()];
+
+        List<(string Job, string Color)> jobColors = new(jobs.Length);
+
+        foreach (var job in jobs)
+        {
+            var department = departments.FirstOrDefault(department => department.Roles.Contains(job.ID));
+
+            jobColors.Add((job.ID, department?.Color.ToHex() ?? UnknownColor));
+        }
+
+        _jobColors = jobColors.ToFrozenDictionary(jobColor => jobColor.Job, jobColor => jobColor.Color);
+    }
+    // Green-HeadsetManifest-End
 }
