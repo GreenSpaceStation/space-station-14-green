@@ -369,10 +369,6 @@
    - gasp
    - gasps
    - gasped
-   # Green-Localization-Start
-   - вздох
-   - вздыхает
-   # Green-Localization-End
 
 - type: emote
   id: DefaultDeathgasp
