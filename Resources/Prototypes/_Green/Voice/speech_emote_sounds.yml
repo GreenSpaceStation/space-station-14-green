@@ -7,8 +7,6 @@
       collection: VulpkaninScreams
     Laugh:
       path: /Audio/_Green/Voice/Vulpkanin/vulp_laugh.ogg
-      params:
-        volume: -10
     Growl:
       collection: Growl
     Howl:
@@ -43,8 +41,6 @@
       collection: VulpkaninScreams
     Laugh:
       path: /Audio/_Green/Voice/Vulpkanin/vulp_laugh.ogg
-      params:
-        volume: -10
     Growl:
       collection: Growl
     Howl:
