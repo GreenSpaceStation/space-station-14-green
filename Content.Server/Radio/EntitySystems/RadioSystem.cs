@@ -52,9 +52,14 @@ public sealed class RadioSystem : EntitySystem
         base.Initialize();
         SubscribeLocalEvent<IntrinsicRadioReceiverComponent, RadioReceiveEvent>(OnIntrinsicReceive);
         SubscribeLocalEvent<IntrinsicRadioTransmitterComponent, EntitySpokeEvent>(OnIntrinsicSpeak);
-        SubscribeLocalEvent<PrototypesReloadedEventArgs>(OnPrototypeReloaded); // Green-HeadsetManifest
 
         _exemptQuery = GetEntityQuery<TelecomExemptComponent>();
+
+        // Green-HeadsetManifest-Start
+        SubscribeLocalEvent<PrototypesReloadedEventArgs>(OnPrototypeReloaded);
+
+        CacheJobColors();
+        // Green-HeadsetManifest-End
     }
 
     private void OnIntrinsicSpeak(EntityUid uid, IntrinsicRadioTransmitterComponent component, EntitySpokeEvent args)
@@ -217,7 +222,12 @@ public sealed class RadioSystem : EntitySystem
     }
 
     // Green-HeadsetManifest-Start
-    private void OnPrototypeReloaded(ref PrototypesReloadedEventArgs e)
+    private void OnPrototypeReloaded(PrototypesReloadedEventArgs e)
+    {
+        CacheJobColors();
+    }
+
+    private void CacheJobColors()
     {
         DepartmentPrototype[] departments = [.. _prototype.EnumeratePrototypes<DepartmentPrototype>()];
 
@@ -229,7 +239,7 @@ public sealed class RadioSystem : EntitySystem
         {
             var department = departments.FirstOrDefault(department => department.Roles.Contains(job.ID));
 
-            jobColors.Add((job.ID, department?.Color.ToHex() ?? UnknownColor));
+            jobColors.Add((job.ID, department?.Color.ToHexNoAlpha() ?? UnknownColor));
         }
 
         _jobColors = jobColors.ToFrozenDictionary(jobColor => jobColor.Job, jobColor => jobColor.Color);
