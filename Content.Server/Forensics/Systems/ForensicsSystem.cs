@@ -301,6 +301,15 @@ namespace Content.Server.Forensics
             return DNA;
         }
 
+        // Green-Signs-Start
+        public string GenerateHandwriting()
+        {
+            var handwriting = new byte[16];
+            _random.NextBytes(handwriting);
+            return Convert.ToHexString(handwriting);
+        }
+        // Green-Signs-End
+
         private void ApplyEvidence(EntityUid user, EntityUid target)
         {
             if (HasComp<IgnoresFingerprintsComponent>(target))
@@ -348,6 +357,17 @@ namespace Content.Server.Forensics
             ent.Comp.Fingerprint = GenerateFingerprint();
             Dirty(ent);
         }
+
+        // Green-Signs-Start
+        public override void RandomizeHandwriting(Entity<HandwritingComponent?> entity)
+        {
+            if (!Resolve(entity, ref entity.Comp, false))
+                return;
+
+            entity.Comp.Handwriting = GenerateHandwriting();
+            Dirty(entity);
+        }
+        // Green-Signs-End
 
         /// <summary>
         /// Transfer DNA from one entity onto the forensics of another

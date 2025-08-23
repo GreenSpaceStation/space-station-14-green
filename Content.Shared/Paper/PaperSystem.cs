@@ -16,6 +16,9 @@ using Content.Shared.Verbs;
 using Content.Shared.CCVar;
 using Robust.Shared.Configuration;
 using Content.Shared._Green.Sign;
+using Content.Shared.Hands.EntitySystems;
+using Content.Shared.Mobs.Components;
+using Content.Shared.Mobs.Systems;
 
 namespace Content.Shared.Paper;
 
@@ -32,13 +35,15 @@ public sealed class PaperSystem : EntitySystem
     [Dependency] private readonly MetaDataSystem _metaSystem = default!;
     [Dependency] private readonly SharedAudioSystem _audio = default!;
     [Dependency] private readonly IConfigurationManager _config = default!;
+    [Dependency] private readonly SharedHandsSystem _hands = default!;
+    [Dependency] private readonly MobStateSystem _mobState = default!;
 
     private static readonly ProtoId<TagPrototype> WriteIgnoreStampsTag = "WriteIgnoreStamps";
     private static readonly ProtoId<TagPrototype> WriteTag = "Write";
 
     private EntityQuery<PaperComponent> _paperQuery;
 
-    private int maxSignLength; // Green-Signs
+    private int _maxSignLength; // Green-Signs
 
     public override void Initialize()
     {
@@ -56,10 +61,11 @@ public sealed class PaperSystem : EntitySystem
         SubscribeLocalEvent<ActivateOnPaperOpenedComponent, PaperWriteEvent>(OnPaperWrite);
 
         // Green-Signs-Start
-        SubscribeLocalEvent<PaperComponent, GetVerbsEvent<AlternativeVerb>>(OnGetVerbs);
+        SubscribeLocalEvent<PaperComponent, GetVerbsEvent<AlternativeVerb>>(OnGetVerbsSign);
+        SubscribeLocalEvent<HandwritingComponent, GetVerbsEvent<AlternativeVerb>>(OnGetVerbsForgeSign);
         SubscribeLocalEvent<PaperComponent, SignMessage>(OnSign);
 
-        Subs.CVar(_config, CCVars.MaxNameLength, value => maxSignLength = value, true);
+        Subs.CVar(_config, CCVars.MaxNameLength, value => _maxSignLength = value, true);
         // Green-Signs-End
 
         _paperQuery = GetEntityQuery<PaperComponent>();
@@ -122,6 +128,15 @@ public sealed class PaperSystem : EntitySystem
                         ("stamps", commaSeparated))
                 );
             }
+
+            // Green-Signs-Start
+            if (entity.Comp.Signs.Count > 0)
+            {
+                var signs = string.Join(", ", entity.Comp.Signs.Select(sign => sign.Name));
+
+                args.PushMarkup(Loc.GetString("paper-component-examine-detail-signs", ("paper", entity), ("signs", signs)));
+            }
+            // Green-Signs-End
         }
     }
 
@@ -257,7 +272,7 @@ public sealed class PaperSystem : EntitySystem
     }
 
     // Green-Signs-Start
-    private void OnGetVerbs(Entity<PaperComponent> entity, ref GetVerbsEvent<AlternativeVerb> e)
+    private void OnGetVerbsSign(Entity<PaperComponent> entity, ref GetVerbsEvent<AlternativeVerb> e)
     {
         if (!e.CanInteract || !e.CanComplexInteract || !e.CanAccess)
             return;
@@ -276,8 +291,57 @@ public sealed class PaperSystem : EntitySystem
             Disabled = disabled,
             Act = () =>
             {
+                var handwriting = CompOrNull<HandwritingComponent>(user)?.Handwriting;
+
                 _uiSystem.OpenUi(entity.Owner, SignUiKey.Key, user);
-                _uiSystem.SetUiState(entity.Owner, SignUiKey.Key, new SignBoundUserInterfaceState(MetaData(user).EntityName, maxSignLength));
+                _uiSystem.SetUiState(entity.Owner, SignUiKey.Key, new SignBoundUserInterfaceState(Name(user), _maxSignLength, handwriting));
+            }
+        });
+    }
+
+    private void OnGetVerbsForgeSign(Entity<HandwritingComponent> entity, ref GetVerbsEvent<AlternativeVerb> e)
+    {
+        if (!e.CanInteract || !e.CanComplexInteract || !e.CanAccess)
+            return;
+
+        var paper = e.Using;
+
+        if (paper is null)
+            return;
+
+        if (!TryComp<PaperComponent>(e.Using, out var paperComponent))
+            return;
+
+        if (paperComponent.Signs.Count >= 128)
+            return;
+
+        if (!_mobState.IsIncapacitated(entity))
+            return;
+
+        var holdingPen = false;
+
+        foreach (var held in _hands.EnumerateHeld(entity.Owner))
+        {
+            if (!_tagSystem.HasTag(held, WriteTag))
+                continue;
+
+            holdingPen = true;
+
+            break;
+        }
+
+        if (!holdingPen)
+            return;
+
+        var user = e.User;
+
+        e.Verbs.Add(new()
+        {
+            Text = Loc.GetString("paper-component-verb-forge-sign-text"),
+            Act = () =>
+            {
+                _uiSystem.OpenUi(paper.Value, SignUiKey.Key, user);
+                _uiSystem.SetUiState(paper.Value, SignUiKey.Key, new SignBoundUserInterfaceState(Name(entity), _maxSignLength, entity.Comp.Handwriting));
             }
         });
     }
@@ -290,15 +354,18 @@ public sealed class PaperSystem : EntitySystem
         if (e.Name.Length > 32)
             return;
 
-        var handwriting = CompOrNull<HandwritingComponent>(e.Actor);
+        if (!_uiSystem.TryGetUiState<SignBoundUserInterfaceState>(entity.Owner, SignUiKey.Key, out var state))
+            return;
 
         entity.Comp.Signs.Add(new()
         {
             Name = e.Name,
-            Handwriting = handwriting?.Handwriting
+            Handwriting = state.Handwriting
         });
 
         Dirty(entity);
+
+        _adminLogger.Add(LogType.Chat, LogImpact.Low, $"{ToPrettyString(e.Actor):player} has signed {ToPrettyString(entity):entity} under the name {e.Name} with handwriting {state.Handwriting ?? "null"}");
 
         _audio.PlayPvs(entity.Comp.Sound, entity);
 

@@ -68,10 +68,11 @@ public sealed partial class PaperComponent : Component
 
     // Green-Signs-Start
     [Serializable, NetSerializable]
-    public sealed class SignBoundUserInterfaceState(string name, int maxLength) : BoundUserInterfaceState
+    public sealed class SignBoundUserInterfaceState(string name, int maxLength, string? handwriting) : BoundUserInterfaceState
     {
         public readonly string Name = name;
         public readonly int MaxLength = maxLength;
+        public readonly string? Handwriting = handwriting;
     }
 
     [Serializable, NetSerializable]

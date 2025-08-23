@@ -301,7 +301,7 @@ namespace Content.Client.Paper.UI
                 {
                     StampInfo = new StampDisplayInfo
                     {
-                        StampedName = sign,
+                        StampedName = sign.Name,
                         StampedColor = DefaultTextColor
                     }
                 });
