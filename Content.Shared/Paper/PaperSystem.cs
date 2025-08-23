@@ -12,6 +12,9 @@ using Robust.Shared.Audio.Systems;
 using static Content.Shared.Paper.PaperComponent;
 using Robust.Shared.Prototypes;
 using Robust.Shared.Random;
+using Content.Shared.Verbs;
+using Content.Shared.CCVar;
+using Robust.Shared.Configuration;
 
 namespace Content.Shared.Paper;
 
@@ -27,11 +30,14 @@ public sealed class PaperSystem : EntitySystem
     [Dependency] private readonly SharedUserInterfaceSystem _uiSystem = default!;
     [Dependency] private readonly MetaDataSystem _metaSystem = default!;
     [Dependency] private readonly SharedAudioSystem _audio = default!;
+    [Dependency] private readonly IConfigurationManager _config = default!;
 
     private static readonly ProtoId<TagPrototype> WriteIgnoreStampsTag = "WriteIgnoreStamps";
     private static readonly ProtoId<TagPrototype> WriteTag = "Write";
 
     private EntityQuery<PaperComponent> _paperQuery;
+
+    private int maxSignLength; // Green-Signs
 
     public override void Initialize()
     {
@@ -47,6 +53,13 @@ public sealed class PaperSystem : EntitySystem
         SubscribeLocalEvent<RandomPaperContentComponent, MapInitEvent>(OnRandomPaperContentMapInit);
 
         SubscribeLocalEvent<ActivateOnPaperOpenedComponent, PaperWriteEvent>(OnPaperWrite);
+
+        // Green-Signs-Start
+        SubscribeLocalEvent<PaperComponent, GetVerbsEvent<AlternativeVerb>>(OnGetVerbs);
+        SubscribeLocalEvent<PaperComponent, SignMessage>(OnSign);
+
+        Subs.CVar(_config, CCVars.MaxNameLength, value => maxSignLength = value, true);
+        // Green-Signs-End
 
         _paperQuery = GetEntityQuery<PaperComponent>();
     }
@@ -242,6 +255,50 @@ public sealed class PaperSystem : EntitySystem
         _interaction.UseInHandInteraction(args.User, entity);
     }
 
+    // Green-Signs-Start
+    private void OnGetVerbs(Entity<PaperComponent> entity, ref GetVerbsEvent<AlternativeVerb> e)
+    {
+        if (!e.CanInteract || !e.CanComplexInteract || !e.CanAccess)
+            return;
+
+        if (entity.Comp.Signs.Count >= 128)
+            return;
+
+        var user = e.User;
+
+        var disabled = e.Using is null || !_tagSystem.HasTag(e.Using.Value, WriteTag);
+
+        e.Verbs.Add(new()
+        {
+            Text = Loc.GetString("paper-component-verb-sign-text"),
+            Message = disabled ? Loc.GetString("paper-component-verb-sign-message") : null,
+            Disabled = disabled,
+            Act = () =>
+            {
+                _uiSystem.OpenUi(entity.Owner, SignUiKey.Key, user);
+                _uiSystem.SetUiState(entity.Owner, SignUiKey.Key, new SignBoundUserInterfaceState(MetaData(user).EntityName, maxSignLength));
+            }
+        });
+    }
+
+    private void OnSign(Entity<PaperComponent> entity, ref SignMessage e)
+    {
+        if (entity.Comp.Signs.Count >= 128)
+            return;
+
+        if (e.Name.Length > 32)
+            return;
+
+        entity.Comp.Signs.Add(e.Name);
+
+        Dirty(entity);
+
+        _audio.PlayPvs(entity.Comp.Sound, entity);
+
+        UpdateUserInterface(entity);
+    }
+    // Green-Signs-End
+
     /// <summary>
     ///     Accepts the name and state to be stamped onto the paper, returns true if successful.
     /// </summary>
@@ -306,7 +363,7 @@ public sealed class PaperSystem : EntitySystem
 
     private void UpdateUserInterface(Entity<PaperComponent> entity)
     {
-        _uiSystem.SetUiState(entity.Owner, PaperUiKey.Key, new PaperBoundUserInterfaceState(entity.Comp.Content, entity.Comp.StampedBy, entity.Comp.Mode));
+        _uiSystem.SetUiState(entity.Owner, PaperUiKey.Key, new PaperBoundUserInterfaceState(entity.Comp.Content, entity.Comp.StampedBy, entity.Comp.Signs, entity.Comp.Mode)); // Green-Signs
     }
 }
 
