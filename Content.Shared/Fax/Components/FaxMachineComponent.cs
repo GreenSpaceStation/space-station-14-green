@@ -158,6 +158,11 @@ public sealed partial class FaxPrintout
     [DataField("stampedBy")]
     public List<StampDisplayInfo> StampedBy { get; private set; } = new();
 
+    // Green-Signs-Start
+    [DataField]
+    public List<string> Signs { get; private set; } = [];
+    // Green-Signs-End
+
     [DataField]
     public bool Locked { get; private set; }
 
@@ -165,7 +170,7 @@ public sealed partial class FaxPrintout
     {
     }
 
-    public FaxPrintout(string content, string name, string? label = null, string? prototypeId = null, string? stampState = null, List<StampDisplayInfo>? stampedBy = null, bool locked = false)
+    public FaxPrintout(string content, string name, string? label = null, string? prototypeId = null, string? stampState = null, List<StampDisplayInfo>? stampedBy = null, List<string>? signs = null, bool locked = false) // Green-Signs
     {
         Content = content;
         Name = name;
@@ -173,6 +178,7 @@ public sealed partial class FaxPrintout
         PrototypeId = prototypeId ?? "";
         StampState = stampState;
         StampedBy = stampedBy ?? new List<StampDisplayInfo>();
+        Signs = signs ?? []; // Green-Signs
         Locked = locked;
     }
 }
