@@ -1,3 +1,4 @@
+using Content.Shared._Green.Sign;
 using Content.Shared.Containers.ItemSlots;
 using Content.Shared.Paper;
 using Robust.Shared.Audio;
@@ -160,7 +161,7 @@ public sealed partial class FaxPrintout
 
     // Green-Signs-Start
     [DataField]
-    public List<string> Signs { get; private set; } = [];
+    public List<SignInfo> Signs { get; private set; } = [];
     // Green-Signs-End
 
     [DataField]
@@ -170,7 +171,7 @@ public sealed partial class FaxPrintout
     {
     }
 
-    public FaxPrintout(string content, string name, string? label = null, string? prototypeId = null, string? stampState = null, List<StampDisplayInfo>? stampedBy = null, List<string>? signs = null, bool locked = false) // Green-Signs
+    public FaxPrintout(string content, string name, string? label = null, string? prototypeId = null, string? stampState = null, List<StampDisplayInfo>? stampedBy = null, List<SignInfo>? signs = null, bool locked = false) // Green-Signs
     {
         Content = content;
         Name = name;

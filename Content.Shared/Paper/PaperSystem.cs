@@ -15,6 +15,7 @@ using Robust.Shared.Random;
 using Content.Shared.Verbs;
 using Content.Shared.CCVar;
 using Robust.Shared.Configuration;
+using Content.Shared._Green.Sign;
 
 namespace Content.Shared.Paper;
 
@@ -289,7 +290,13 @@ public sealed class PaperSystem : EntitySystem
         if (e.Name.Length > 32)
             return;
 
-        entity.Comp.Signs.Add(e.Name);
+        var handwriting = CompOrNull<HandwritingComponent>(e.Actor);
+
+        entity.Comp.Signs.Add(new()
+        {
+            Name = e.Name,
+            Handwriting = handwriting?.Handwriting
+        });
 
         Dirty(entity);
 

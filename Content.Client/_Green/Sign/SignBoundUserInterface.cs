@@ -1,9 +1,8 @@
 using JetBrains.Annotations;
 using Robust.Client.UserInterface;
 using Content.Shared.Paper;
-using Content.Client._Green.Paper.UI;
 
-namespace Content.Client.Paper.UI;
+namespace Content.Client._Green.Sign;
 
 [UsedImplicitly]
 public sealed class SignBoundUserInterface(EntityUid owner, Enum uiKey) : BoundUserInterface(owner, uiKey)

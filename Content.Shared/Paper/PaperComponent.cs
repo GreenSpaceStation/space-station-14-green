@@ -1,3 +1,4 @@
+using Content.Shared._Green.Sign;
 using Robust.Shared.Audio;
 using Robust.Shared.GameStates;
 using Robust.Shared.Serialization;
@@ -19,7 +20,7 @@ public sealed partial class PaperComponent : Component
 
     // Green-Signs-Start
     [DataField, AutoNetworkedField]
-    public List<string> Signs { get; set; } = [];
+    public List<SignInfo> Signs { get; set; } = [];
     // Green-Signs-End
 
     /// <summary>
@@ -42,10 +43,10 @@ public sealed partial class PaperComponent : Component
     {
         public readonly string Text;
         public readonly List<StampDisplayInfo> StampedBy;
-        public readonly List<string> Signs; // Green-Signs
+        public readonly List<SignInfo> Signs; // Green-Signs
         public readonly PaperAction Mode;
 
-        public PaperBoundUserInterfaceState(string text, List<StampDisplayInfo> stampedBy, List<string> signs, PaperAction mode = PaperAction.Read) // Green-Signs
+        public PaperBoundUserInterfaceState(string text, List<StampDisplayInfo> stampedBy, List<SignInfo> signs, PaperAction mode = PaperAction.Read) // Green-Signs
         {
             Text = text;
             StampedBy = stampedBy;
