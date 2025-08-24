@@ -20,10 +20,8 @@
   id: DocumentScannerCentcomm
   components:
   - type: Sprite
-    #sprite: _Green/Objects/Tools/document_scanner.rsi
     state: icon_centcomm
   - type: Item
-    #sprite: _Green/Objects/Tools/document_scanner.rsi
     state: icon_centcomm
   - type: Calligraph
     allStations: true

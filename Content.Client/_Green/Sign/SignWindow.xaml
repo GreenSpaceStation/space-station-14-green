@@ -4,6 +4,6 @@
 
     <BoxContainer Orientation="Vertical">
         <LineEdit Name="SignEdit" HorizontalExpand="True" />
-        <Button Name="SignButton" Text="{Loc 'paper-ui-sign-button'}" />
+        <Button Name="SignButton" Text="{Loc paper-ui-sign-button}" />
     </BoxContainer>
 </controls:FancyWindow>
