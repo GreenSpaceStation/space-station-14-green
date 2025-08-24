@@ -351,7 +351,7 @@ public sealed class PaperSystem : EntitySystem
         if (entity.Comp.Signs.Count >= 128)
             return;
 
-        if (e.Name.Length > 32)
+        if (e.Name.Length is < 1 or > 32)
             return;
 
         if (!_uiSystem.TryGetUiState<SignBoundUserInterfaceState>(entity.Owner, SignUiKey.Key, out var state))

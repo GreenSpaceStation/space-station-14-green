@@ -20,7 +20,7 @@ public sealed partial class SignWindow : FancyWindow
 
         SignButton.OnPressed += _ => Sign();
 
-        SignEdit.OnTextChanged += e => SignButton.Disabled = e.Text.Length > _maxLength;
+        SignEdit.OnTextChanged += e => SignButton.Disabled = e.Text.Length < 1 || e.Text.Length > _maxLength;
     }
 
     public void Populate(PaperComponent.SignBoundUserInterfaceState state)

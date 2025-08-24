@@ -304,7 +304,7 @@ namespace Content.Server.Forensics
         // Green-Signs-Start
         public string GenerateHandwriting()
         {
-            var handwriting = new byte[16];
+            var handwriting = new byte[4];
             _random.NextBytes(handwriting);
             return Convert.ToHexString(handwriting);
         }

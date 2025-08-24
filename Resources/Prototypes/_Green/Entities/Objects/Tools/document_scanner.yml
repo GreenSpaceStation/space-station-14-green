@@ -1,0 +1,29 @@
+- type: entity
+  parent: [BaseItem, BaseSyndicateContraband]
+  id: DocumentScanner
+  components:
+  - type: Sprite
+    #sprite: _Green/Objects/Tools/document_scanner.rsi
+    sprite: Objects/Tools/emag.rsi
+    state: icon
+  - type: Item
+    #sprite: _Green/Objects/Tools/document_scanner.rsi
+    sprite: Objects/Tools/emag.rsi
+  - type: UserInterface
+    interfaces:
+      enum.CalligraphUiKey.Key:
+        type: CalligraphBoundUserInterface
+  - type: Calligraph
+
+- type: entity
+  parent: DocumentScanner
+  id: DocumentScannerCentcomm
+  components:
+  - type: Sprite
+    #sprite: _Green/Objects/Tools/document_scanner.rsi
+    state: icon_centcomm
+  - type: Item
+    #sprite: _Green/Objects/Tools/document_scanner.rsi
+    state: icon_centcomm
+  - type: Calligraph
+    allStations: true
