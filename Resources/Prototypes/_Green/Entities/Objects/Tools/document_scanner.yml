@@ -4,11 +4,11 @@
   components:
   - type: Sprite
     #sprite: _Green/Objects/Tools/document_scanner.rsi
-    sprite: Objects/Tools/emag.rsi
+    sprite: Objects/Tools/appraisal-tool.rsi
     state: icon
   - type: Item
     #sprite: _Green/Objects/Tools/document_scanner.rsi
-    sprite: Objects/Tools/emag.rsi
+    sprite: Objects/Tools/appraisal-tool.rsi
   - type: UserInterface
     interfaces:
       enum.CalligraphUiKey.Key:
@@ -19,9 +19,9 @@
   parent: DocumentScanner
   id: DocumentScannerCentcomm
   components:
-  - type: Sprite
-    state: icon_centcomm
-  - type: Item
-    state: icon_centcomm
+  #- type: Sprite
+  #  state: icon-centcomm
+  #- type: Item
+  #  state: icon-centcomm
   - type: Calligraph
     allStations: true
