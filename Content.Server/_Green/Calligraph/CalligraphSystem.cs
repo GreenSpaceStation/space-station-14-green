@@ -5,6 +5,7 @@ using Content.Shared.Paper;
 using Content.Shared.Station;
 using Content.Shared.StationRecords;
 using Content.Shared.Verbs;
+using Robust.Shared.Audio.Systems;
 
 namespace Content.Server._Green.Calligraph;
 
@@ -13,6 +14,7 @@ public sealed class CalligraphSystem : EntitySystem
     [Dependency] private readonly SharedUserInterfaceSystem _ui = default!;
     [Dependency] private readonly SharedStationSystem _station = default!;
     [Dependency] private readonly StationRecordsSystem _records = default!;
+    [Dependency] private readonly SharedAudioSystem _audio = default!;
 
     public override void Initialize()
     {
@@ -68,6 +70,8 @@ public sealed class CalligraphSystem : EntitySystem
                         Author = author
                     });
                 }
+
+                _audio.PlayPvs(entity.Comp.ScanSound, entity);
 
                 _ui.OpenUi(entity.Owner, CalligraphUiKey.Key, user);
                 _ui.SetUiState(entity.Owner, CalligraphUiKey.Key, new CalligraphBoundUserInterfaceState(records));
