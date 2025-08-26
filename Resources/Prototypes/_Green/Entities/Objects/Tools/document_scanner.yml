@@ -19,7 +19,5 @@
   components:
   - type: Sprite
     state: icon-centcomm
-  - type: Item
-    state: icon-centcomm
   - type: Calligraph
     allStations: true
