@@ -1,5 +1,5 @@
 - type: entity
-  parent: [BaseItem, BaseSyndicateContraband]
+  parent: [BaseItem, BaseCommandContraband]
   id: DocumentScanner
   components:
   - type: Sprite
