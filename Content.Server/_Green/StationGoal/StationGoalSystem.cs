@@ -1,8 +1,8 @@
 using Content.Server.Fax;
-using Content.Server.Station.Components;
-using Content.Server.Station.Systems;
 using Content.Shared.Fax.Components;
 using Content.Shared.GameTicking;
+using Content.Shared.Station;
+using Content.Shared.Station.Components;
 using Robust.Shared.Prototypes;
 using Robust.Shared.Random;
 
@@ -12,7 +12,7 @@ public sealed class StationGoalSystem : EntitySystem
 {
     [Dependency] private readonly IPrototypeManager _prototype = default!;
     [Dependency] private readonly IRobustRandom _random = default!;
-    [Dependency] private readonly StationSystem _station = default!;
+    [Dependency] private readonly SharedStationSystem _station = default!;
     [Dependency] private readonly FaxSystem _fax = default!;
 
     public bool SendStationGoalOnRoundStart { get; set; }
@@ -45,7 +45,7 @@ public sealed class StationGoalSystem : EntitySystem
 
     public void SendStationGoal(EntityUid station, StationGoalPrototype goal)
     {
-        FaxPrintout printout = new("Test.", "test", null, null, "paper_stamp-centcom", [new() { StampedName = Loc.GetString("stamp-component-stamped-name-centcom"), StampedColor = Color.FromHex("#006600") }], true);
+        FaxPrintout printout = new("Test.", "test", null, null, "paper_stamp-centcom", [new() { StampedName = Loc.GetString("stamp-component-stamped-name-centcom"), StampedColor = Color.FromHex("#006600") }]);
 
         var query = EntityQueryEnumerator<FaxMachineComponent>();
         while (query.MoveNext(out var entity, out var fax))
