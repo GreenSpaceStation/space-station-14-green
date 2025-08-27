@@ -1,0 +1,4 @@
+- type: stationGoal
+  id: Shuttle
+  text: station-goal-shuttle
+  implicit: true

@@ -8,8 +8,8 @@ public sealed partial class StationGoalPrototype : IPrototype
     [IdDataField]
     public string ID { get; private set; } = default!;
 
-    [DataField]
-    public string? Text;
+    [DataField(required: true)]
+    public string Text = "";
 
     [DataField]
     public bool Implicit;

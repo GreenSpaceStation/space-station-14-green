@@ -2,7 +2,6 @@ using Content.Server.Fax;
 using Content.Shared.Fax.Components;
 using Content.Shared.GameTicking;
 using Content.Shared.Station;
-using Content.Shared.Station.Components;
 using Robust.Shared.Prototypes;
 using Robust.Shared.Random;
 
@@ -19,15 +18,21 @@ public sealed class StationGoalSystem : EntitySystem
 
     public override void Initialize()
     {
-        SubscribeLocalEvent<StationDataComponent, MapInitEvent>(OnMapInit);
+        SubscribeLocalEvent<SendStationGoalsEvent>(OnSendStationGoals);
         SubscribeLocalEvent<RoundRestartCleanupEvent>(OnRoundRestartCleanup);
     }
 
-    private void OnMapInit(Entity<StationDataComponent> entity, ref MapInitEvent e)
+    private void OnSendStationGoals(ref SendStationGoalsEvent e)
+    {
+        foreach (var station in _station.GetStations())
+            SendStationGoal(station);
+    }
+
+    private void SendStationGoal(EntityUid station)
     {
         List<StationGoalPrototype> goals = [];
 
-        if (TryComp<StationGoalComponent>(entity, out var stationGoals))
+        if (TryComp<StationGoalComponent>(station, out var stationGoals))
             foreach (var goal in stationGoals.Goals)
                 goals.Add(_prototype.Index(goal));
         else
@@ -35,17 +40,17 @@ public sealed class StationGoalSystem : EntitySystem
                 if (goal.Implicit)
                     goals.Add(goal);
 
-        SendStationGoal(entity, _random.Pick(goals));
+        SendStationGoal(station, _random.Pick(goals));
     }
 
-    private void OnRoundRestartCleanup(ref RoundRestartCleanupEvent e)
+    private void OnRoundRestartCleanup(RoundRestartCleanupEvent e)
     {
         SendStationGoalOnRoundStart = true;
     }
 
     public void SendStationGoal(EntityUid station, StationGoalPrototype goal)
     {
-        FaxPrintout printout = new("Test.", "test", null, null, "paper_stamp-centcom", [new() { StampedName = Loc.GetString("stamp-component-stamped-name-centcom"), StampedColor = Color.FromHex("#006600") }]);
+        FaxPrintout printout = new(Loc.GetString("station-goal-form", ("station", Name(station)), ("goal", Loc.GetString(goal.Text))), Loc.GetString("station-goal-name"), null, null, "paper_stamp-centcom", [new() { StampedName = Loc.GetString("stamp-component-stamped-name-centcom"), StampedColor = Color.FromHex("#006600") }]);
 
         var query = EntityQueryEnumerator<FaxMachineComponent>();
         while (query.MoveNext(out var entity, out var fax))
