@@ -1,0 +1,37 @@
+[game]
+hostname = "[RU][18+] Central Station"
+desc = "Проект Central Station на сборке Green."
+lobbyduration = 360
+maxcharacterslots = 8
+map_pool = "GreenMapPool"
+soft_max_players = 60
+secret_weight_prototype = "CentralSecret"
+contraband_examine = false
+
+[infolinks]
+#discord
+github = "https://github.com/GreenSpaceStation/space-station-14-green"
+wiki = "https://centralspace.ru"
+
+[shuttle]
+arrivals_map = "/Maps/Corvax/Misc/corvax_terminal.yml"
+emergency_early_launch_allowed = true
+auto_call_time = 150
+
+[ic]
+flavor_text = true
+
+[vote]
+enabled = false
+
+[viewport]
+maximum_width = 25
+
+[admin]
+see_own_notes = true
+
+[server]
+lobby_name = "Central Station"
+
+[adminlogs]
+server_name = central

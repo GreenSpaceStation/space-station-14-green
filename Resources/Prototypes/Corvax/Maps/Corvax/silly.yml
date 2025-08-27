@@ -23,7 +23,6 @@
           availableJobs:
             # command
             Captain: [ 1, 1 ]
-            IAA: [ 1, 1 ]
             # cargo
             Quartermaster: [ 1, 1 ]
             SalvageSpecialist: [ 3, 3 ]
@@ -66,16 +65,8 @@
             Passenger: [ -1, -1 ]
             # silicon
             Borg: [ 1, 1 ]
-        - type: StationGoal
-          goals:
-          - Singularity
-          - SolarPanels
-          - Artifacts
-          - Bank
-          - Zoo
-          - MiningOutpost
-          - Tesla
-          - SecurityTraining
-          - Theatre
-          - Botany
-          - Bunker
+            # corvax senior
+            SeniorEngineer: [ 1, 1 ]
+            SeniorPhysician: [ 1, 1 ]
+            SeniorResearcher: [ 1, 1 ]
+            SeniorOfficer: [ 1, 1 ]

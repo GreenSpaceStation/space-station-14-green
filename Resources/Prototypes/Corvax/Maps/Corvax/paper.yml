@@ -21,7 +21,6 @@
           availableJobs:
             # command
             Captain: [ 1, 1 ]
-            IAA: [ 1, 1 ]
             Quartermaster: [ 1, 1 ]
             ChiefEngineer: [ 1, 1 ]
             ChiefMedicalOfficer: [ 1, 1 ]
@@ -66,3 +65,8 @@
             #silicon
             StationAi: [ 1, 1 ]
             Borg: [ 3, 3 ]
+            # corvax senior
+            SeniorEngineer: [ 1, 1 ]
+            SeniorPhysician: [ 1, 1 ]
+            SeniorResearcher: [ 1, 1 ]
+            SeniorOfficer: [ 1, 1 ]

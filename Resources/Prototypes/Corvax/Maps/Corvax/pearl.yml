@@ -21,7 +21,6 @@
           availableJobs:
             # command
             Captain: [ 1, 1 ]
-            IAA: [ 1, 1 ]
             # cargo
             Quartermaster: [ 1, 1 ]
             SalvageSpecialist: [ 3, 3 ]
@@ -48,7 +47,6 @@
             SecurityOfficer: [ 4, 4 ]
             SecurityCadet: [ 2, 2 ]
             Detective: [ 1, 1 ]
-            Pilot: [ 2, 2 ]
             # service
             HeadOfPersonnel: [ 1, 1 ]
             Bartender: [ 2, 2 ]
@@ -67,21 +65,8 @@
             # silicon
             Borg: [ 2, 2 ]
             StationAi: [ 1, 1 ]
-        - type: StationGoal
-          goals:
-          - SolarPanels
-          - Artifacts
-          - Bank
-          - Zoo
-          - MiningOutpost
-          - Tesla
-          - SecurityTraining
-          - ShuttleMed
-          - ShuttleSec
-          - ShuttleRnd
-          - ShuttleSrv
-          - ShuttleEmergency
-          - Theatre
-          - CellAI
-          - Botany
-          - Bunker
+            # corvax senior
+            SeniorEngineer: [ 1, 1 ]
+            SeniorPhysician: [ 1, 1 ]
+            SeniorResearcher: [ 1, 1 ]
+            SeniorOfficer: [ 1, 1 ]
