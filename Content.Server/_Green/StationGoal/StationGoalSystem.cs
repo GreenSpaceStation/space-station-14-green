@@ -25,6 +25,9 @@ public sealed class StationGoalSystem : EntitySystem
 
     private void OnSendStationGoals(ref SendStationGoalsEvent e)
     {
+        if (!SendStationGoalOnRoundStart)
+            return;
+
         foreach (var station in _station.GetStations())
             SendStationGoal(station);
     }
