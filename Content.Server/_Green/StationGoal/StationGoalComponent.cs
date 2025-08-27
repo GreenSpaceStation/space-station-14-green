@@ -1,3 +1,4 @@
+using Content.Shared._Green.StationGoal;
 using Robust.Shared.Prototypes;
 
 namespace Content.Server._Green.StationGoal;

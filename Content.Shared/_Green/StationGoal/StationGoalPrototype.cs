@@ -1,6 +1,6 @@
 using Robust.Shared.Prototypes;
 
-namespace Content.Server._Green.StationGoal;
+namespace Content.Shared._Green.StationGoal;
 
 [Prototype]
 public sealed partial class StationGoalPrototype : IPrototype
