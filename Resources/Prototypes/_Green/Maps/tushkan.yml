@@ -1,7 +1,7 @@
 - type: gameMap
   id: GreenTushkan
   mapName: 'Tushkan'
-  mapPath: /Maps/_Green/GreenTushkan.yml
+  mapPath: /Maps/_Green/green_tushkan.yml
   maxRandomOffset: 0
   randomRotation: false
   minPlayers: 0

@@ -1,7 +1,7 @@
 - type: gameMap
   id: GreenMaus
   mapName: 'Maus Station'
-  mapPath: /Maps/_Green/GreenMaus.yml
+  mapPath: /Maps/_Green/green_maus.yml
   maxRandomOffset: 0
   randomRotation: false
   minPlayers: 0
