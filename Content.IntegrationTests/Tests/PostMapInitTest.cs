@@ -53,7 +53,10 @@ namespace Content.IntegrationTests.Tests
             "/Maps/Shuttles/ShuttleEvent/honki.yml", // Contains golden honker, clown's rubber stamp
             "/Maps/Shuttles/ShuttleEvent/instigator.yml", // Contains EXP-320g "Friendship"
             "/Maps/Shuttles/ShuttleEvent/syndie_evacpod.yml", // Contains syndicate rubber stamp
-            "/Maps/Corvax/corvax_awesome.yml" // Green-Maps
+            // Green-Maps-Start
+            "/Maps/Corvax/corvax_awesome.yml",
+            "/Maps/_Green/green_reach.yml"
+            // Green-Maps-End
         };
 
         private static readonly string[] GameMaps =
