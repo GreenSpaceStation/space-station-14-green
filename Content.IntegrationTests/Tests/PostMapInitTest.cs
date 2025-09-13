@@ -77,21 +77,12 @@ namespace Content.IntegrationTests.Tests
             "dm01-entryway",
             "Exo",
             // Green-Maps-Start
-            "CorvaxAvrite",
-            "CorvaxDelta",
-            "CorvaxSilly",
-            "CorvaxOutpost",
-            "CorvaxAstra",
-            "CorvaxMaus",
-            "CorvaxPaper",
-            "CorvaxPilgrim",
-            "CorvaxSplit",
-            "CorvaxTerra",
-            "CorvaxPearl",
-            "CorvaxTushkan",
-            "CorvaxGlacier",
             "CorvaxAwesome",
-            "CorvaxChloris",
+            "CorvaxOutpost",
+            "GreenMaus",
+            "GreenPaper",
+            "GreenReach",
+            "GreenTushkan"
             // Green-Maps-End
         };
 
